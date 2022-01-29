@@ -294,7 +294,8 @@ impl ECDSASigningKey {
         scheme: SignatureScheme,
         sigalg: &'static signature::EcdsaSigningAlgorithm,
     ) -> Result<ECDSASigningKey, ()> {
-        EcdsaKeyPair::from_pkcs8(sigalg, &der.0)
+        let rng = ring::rand::SystemRandom::new();
+        EcdsaKeyPair::from_pkcs8(sigalg, &der.0, &rng)
             .map(|kp| ECDSASigningKey {
                 key: Arc::new(kp),
                 scheme,
